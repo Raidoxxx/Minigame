@@ -2,9 +2,10 @@
 
 namespace Minigame\Arena;
 
+use Minigame\Arena\spawn\Spawn;
+use Minigame\Arena\spawn\SpawnHandler;
 use pocketmine\world\Position;
 use pocketmine\world\World;
-use TheBridge\Arena\spawn\SpawnHandler;
 
 abstract class Arena
 {
@@ -42,7 +43,7 @@ abstract class Arena
         return $this->world;
     }
 
-    public function getSpawnHandler():SpawnHandler{
+    public function getSpawnHandler() : SpawnHandler{
         return $this->spawnHandler;
     }
 

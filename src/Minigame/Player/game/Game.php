@@ -2,8 +2,6 @@
 
 namespace Minigame\Player\game;
 
-
-
 use Minigame\Arena\Arena;
 
 class Game
