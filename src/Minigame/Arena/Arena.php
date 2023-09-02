@@ -46,22 +46,4 @@ abstract class Arena
     public function getSpawnHandler() : SpawnHandler{
         return $this->spawnHandler;
     }
-
-    public function addSpawn(Position $position): void
-    {
-        if(!count($this->spawnHandler->getSpawns()) >= $this->max_slots){
-            $spawn = new Spawn($position);
-            $this->spawnHandler->addSpawn($spawn);
-        }
-    }
-
-    public function removeSpawn(Position $position):void{
-       $this->spawnHandler->removeSpawn(new Spawn($position));
-    }
-
-    public function getSlotsEmpyt():Spawn|null{
-        foreach ($this->slots_empyt as $slot_empyt){
-            return $this->getSpawnHandler()->getSpawns()[$slot_empyt];
-        } return null;
-    }
 }
