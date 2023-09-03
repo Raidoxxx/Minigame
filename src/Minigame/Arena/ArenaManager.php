@@ -2,14 +2,29 @@
 
 namespace Minigame\Arena;
 
+use Minigame\Game\Game;
+use Minigame\Main;
+use Minigame\Player\session\SessionManager;
+use Minigame\Utils\WorldManager;
+use pocketmine\player\Player;
+use pocketmine\Server;
+
 class ArenaManager
 {
+    use WorldManager;
     private array $arenas;
 
     private static ArenaManager $instance;
-    public function __construct()
+    private Game $game;
+
+    public function __construct(Game $game)
     {
+        $this->game = $game;
         self::$instance = $this;
+    }
+
+    public function getGame():Game{
+        return $this->game;
     }
 
     /**
@@ -18,6 +33,11 @@ class ArenaManager
     public static function getInstance(): ArenaManager
     {
         return self::$instance;
+    }
+
+    public function getArenas(): array
+    {
+        return $this->arenas;
     }
 
     public function addArena(Arena $arena): void
@@ -41,5 +61,36 @@ class ArenaManager
         if($arena = $this->existArena($id)){
             return $arena;
         }return null;
+    }
+
+    public function generateCloneArena(Arena $arena):void{
+        $world_name = $arena->getWorld()->getFolderName() . '_' . rand(1, 99999);
+        $this->cloneWorld($arena->getWorld(), $world_name);
+        $class = $arena::class;
+        $newArena = new $class($arena->getName(), $arena->getSpawnHandler()->getMaxSlots(), Server::getInstance()->getWorldManager()->getWorldByName($world_name));
+        $this->addArena($newArena);
+    }
+
+    public function joinArena(Player $player): void
+    {
+        $rdxPlayer = SessionManager::getSession($player)->getPlayer();
+
+        if($rdxPlayer->isInArena()) return;
+
+        /**
+         * @var Arena $arena
+         */
+        $arenas = $this->getArenas();
+
+        foreach ($arenas as $arena){
+            if($arena->getStatus() === ArenaEnum::WAITING){
+                if(count($arena->getArenaPlayerManager()->getPlaying()) >= $this->getGame()->getSlots()) return;
+
+                $arena->getArenaPlayerManager()->addPlaying($rdxPlayer);
+                $rdxPlayer->setInArena(true);
+            }
+
+
+        }
     }
 }

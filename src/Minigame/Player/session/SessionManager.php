@@ -2,49 +2,41 @@
 
 namespace Minigame\Player\session;
 
+use pocketmine\player\Player;
+
 class SessionManager
 {
 
     /**
      * @var Session[]
      */
-    private array $sessions = [];
+    private static array $sessions = [];
 
-    /**
-     * @param Session $session
-     * @return void
-     */
-    public function addSession(Session $session): void
+    public static function addSession(Player $player): void
     {
-        if(!$this->existSession($session)){
-            $this->sessions[$session->getId()] = $session;
-        }
+        if(self::existSession($player)) return;
+        self::$sessions[$player->getUniqueId()->toString()] = new Session($player);
     }
 
-    /**
-     * @param Session $session
-     * @return void
-     */
-    public function removeSession(Session $session): void
+    private static function existSession(Player $player): bool
     {
-        if($this->existSession($session)){
-           unset($this->sessions[$session->getId()]);
-        }
+        return isset(self::$sessions[$player->getUniqueId()->toString()]);
     }
 
-    /**
-     * @param Session $session
-     * @return bool
-     */
-    public function existSession(Session $session): bool
+    public static function removeSession(Player $player): void
     {
-        return isset($this->sessions[$session->getId()]);
+        if(!self::existSession($player)) return;
+        unset(self::$sessions[$player->getUniqueId()->toString()]);
     }
 
-    /**
-     * @return Session[]
-     */
-    public function getAllSessions():array{
-        return $this->sessions;
+    public static function getSession(Player $player): ?Session
+    {
+        if(!self::existSession($player)) return null;
+        return self::$sessions[$player->getUniqueId()->toString()];
+    }
+
+    public static function getSessions(): array
+    {
+        return self::$sessions;
     }
 }

@@ -2,7 +2,6 @@
 
 namespace Minigame\Player;
 
-use Minigame\Player\game\GameManager;
 use Minigame\Player\session\Session;
 use pocketmine\player\Player;
 
@@ -18,15 +17,11 @@ class RDXPlayer
      */
     private Player $player;
 
-    /**
-     * @var GameManager
-     */
-    private GameManager $gameManager;
+    private bool $isInArena = false;
 
     public function __construct(Session $session, Player $player){
         $this->session = $session;
         $this->player = $player;
-        $this->gameManager = new GameManager($this);
     }
 
     /**
@@ -43,9 +38,13 @@ class RDXPlayer
         return $this->session;
     }
 
-
-    public function getGameManager(GameManager $game): GameManager
+    public function isInArena():bool
     {
-        return $this->gameManager;
+        return $this->isInArena;
+    }
+
+    public function setInArena(bool $value): void
+    {
+        $this->isInArena = $value;
     }
 }

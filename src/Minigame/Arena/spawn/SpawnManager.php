@@ -11,10 +11,6 @@ class SpawnManager
      */
     private array $spawns = [];
 
-    /**
-     * @var Spawn[]
-     */
-    private array $used_spawns = [];
 
     /**
      * @var Arena
@@ -42,6 +38,9 @@ class SpawnManager
         return $this->arena;
     }
 
+    /**
+     * @return int
+     */
     public function getMaxSlots():int{
         return $this->max_slots;
     }
@@ -59,7 +58,6 @@ class SpawnManager
      * @param Spawn $spawn
      * @return bool|int|string|null
      */
-
     public function existSpawn(Spawn $spawn): bool|int|string|null
     {
         foreach ($this->spawns as $s){
@@ -70,7 +68,6 @@ class SpawnManager
 
         return null;
     }
-
 
     /**
      * @param Spawn $spawn
@@ -90,49 +87,6 @@ class SpawnManager
     }
 
     /**
-     * @return Spawn[]
-     */
-    public function getUseSpawns():array{
-        return $this->used_spawns;
-    }
-
-
-    /**
-     * @param Spawn $spawn
-     * @return void
-     */
-    public function addUsedSpawn(Spawn $spawn):void{
-        $this->used_spawns[] = $spawn;
-    }
-
-
-    /**
-     * @param Spawn $spawn
-     * @return void
-     */
-    public function removeUsedSpawn(Spawn $spawn):void{
-        if($index = $this->existUsedSpawn($spawn)){
-            unset($this->used_spawns[$index]);
-        }
-    }
-
-    /**
-     * @param Spawn $spawn
-     * @return bool|int|string|null
-     */
-    public function existUsedSpawn(Spawn $spawn): bool|int|string|null
-    {
-        foreach ($this->used_spawns as $s){
-            if($s->getPos() === $spawn->getPos()){
-                return array_search($s, $this->used_spawns);
-            }
-        }
-
-        return null;
-    }
-
-
-    /**
      * @param array $spawns
      * @return void
      */
@@ -142,6 +96,4 @@ class SpawnManager
             $this->addSpawn(new Spawn($spawn));
         }
     }
-
-
 }
