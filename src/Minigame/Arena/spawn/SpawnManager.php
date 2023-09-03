@@ -4,12 +4,17 @@ namespace Minigame\Arena\spawn;
 
 use Minigame\Arena\Arena;
 
-class SpawnHandler
+class SpawnManager
 {
     /**
      * @var Spawn[] $spawns
      */
-    private array $spawns;
+    private array $spawns = [];
+
+    /**
+     * @var Spawn[]
+     */
+    private array $used_spawns = [];
 
     /**
      * @var Arena
@@ -17,10 +22,17 @@ class SpawnHandler
     private Arena $arena;
 
     /**
-     * @param Arena $arena
+     * @var int
      */
-    public function __construct(Arena $arena){
+    private int $max_slots;
+
+    /**
+     * @param Arena $arena
+     * @param int $max_slots
+     */
+    public function __construct(Arena $arena, int $max_slots){
         $this->arena = $arena;
+        $this->max_slots = $max_slots;
     }
 
     /**
@@ -28,6 +40,10 @@ class SpawnHandler
      */
     public function getArena():Arena{
         return $this->arena;
+    }
+
+    public function getMaxSlots():int{
+        return $this->max_slots;
     }
 
     /**
@@ -73,6 +89,48 @@ class SpawnHandler
         return $this->spawns;
     }
 
+    /**
+     * @return Spawn[]
+     */
+    public function getUseSpawns():array{
+        return $this->used_spawns;
+    }
+
+
+    /**
+     * @param Spawn $spawn
+     * @return void
+     */
+    public function addUsedSpawn(Spawn $spawn):void{
+        $this->used_spawns[] = $spawn;
+    }
+
+
+    /**
+     * @param Spawn $spawn
+     * @return void
+     */
+    public function removeUsedSpawn(Spawn $spawn):void{
+        if($index = $this->existUsedSpawn($spawn)){
+            unset($this->used_spawns[$index]);
+        }
+    }
+
+    /**
+     * @param Spawn $spawn
+     * @return bool|int|string|null
+     */
+    public function existUsedSpawn(Spawn $spawn): bool|int|string|null
+    {
+        foreach ($this->used_spawns as $s){
+            if($s->getPos() === $spawn->getPos()){
+                return array_search($s, $this->used_spawns);
+            }
+        }
+
+        return null;
+    }
+
 
     /**
      * @param array $spawns
@@ -84,5 +142,6 @@ class SpawnHandler
             $this->addSpawn(new Spawn($spawn));
         }
     }
+
 
 }

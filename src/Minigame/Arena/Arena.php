@@ -2,28 +2,22 @@
 
 namespace Minigame\Arena;
 
-use Minigame\Arena\spawn\Spawn;
-use Minigame\Arena\spawn\SpawnHandler;
-use pocketmine\world\Position;
+use Minigame\Arena\spawn\SpawnManager;
 use pocketmine\world\World;
 
 abstract class Arena
 {
 
     private string $name;
-    private int $max_slots;
-    private array $slots_empyt;
-
     private ArenaPlayerManager $arenaPlayerManager;
     private World $world;
-    private SpawnHandler $spawnHandler;
+    private SpawnManager $spawnHandler;
 
-    public function __construct(string $name, int $slots, World $world, SpawnHandler $spawnHandler)
+    public function __construct(string $name, int $slots, World $world)
     {
         $this->name = $name;
-        $this->max_slots = $slots;
         $this->world = $world;
-        $this->spawnHandler = new SpawnHandler($this);
+        $this->spawnHandler = new SpawnManager($this, $slots);
         $this->arenaPlayerManager = new ArenaPlayerManager();
     }
 
@@ -35,15 +29,15 @@ abstract class Arena
         return $this->name;
     }
 
-    public function getMaxSlots():int{
-        return $this->max_slots;
-    }
-
     public function getWorld():World{
         return $this->world;
     }
 
-    public function getSpawnHandler() : SpawnHandler{
+    public function getSpawnHandler() : SpawnManager{
         return $this->spawnHandler;
+    }
+
+    public function getArenaPlayerManager(): ArenaPlayerManager{
+        return $this->arenaPlayerManager;
     }
 }
