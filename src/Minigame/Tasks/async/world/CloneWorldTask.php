@@ -1,7 +1,8 @@
 <?php
 
-namespace Minigame\Tasks;
+namespace Minigame\Tasks\async\world;
 
+use Minigame\Main;
 use pocketmine\scheduler\AsyncTask;
 
 class CloneWorldTask extends AsyncTask
@@ -38,6 +39,14 @@ class CloneWorldTask extends AsyncTask
 
     public function onCompletion(): void
     {
-        $this->setResult(true);
+        $world_name = explode('/', $this->to);
+        $world_name = end($world_name);
+        $world = Main::getInstance()->getServer()->getWorldManager()->getWorldByName($world_name);
+
+        if(is_null($world)){
+            Main::getInstance()->getServer()->getWorldManager()->loadWorld($world_name);
+        }
+
+        Main::getInstance()->getMapManager()->addWorldCloned($world);
     }
 }

@@ -5,13 +5,11 @@ namespace Minigame\Arena;
 use Minigame\Game\Game;
 use Minigame\Main;
 use Minigame\Player\session\SessionManager;
-use Minigame\Utils\WorldManager;
 use pocketmine\player\Player;
 use pocketmine\Server;
 
 class ArenaManager
 {
-    use WorldManager;
     private array $arenas;
 
     private static ArenaManager $instance;
@@ -64,8 +62,13 @@ class ArenaManager
     }
 
     public function generateCloneArena(Arena $arena):void{
+
         $world_name = $arena->getWorld()->getFolderName() . '_' . rand(1, 99999);
-        $this->cloneWorld($arena->getWorld(), $world_name);
+
+        Main::getInstance()->getMapManager()->cloneWorld($arena->getWorld(), $world_name);
+
+        $arena->getWorld()->setAutoSave(false);
+
         $class = $arena::class;
         $newArena = new $class($arena->getName(), $arena->getSpawnHandler()->getMaxSlots(), Server::getInstance()->getWorldManager()->getWorldByName($world_name));
         $this->addArena($newArena);
