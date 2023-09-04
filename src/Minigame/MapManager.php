@@ -50,7 +50,7 @@ class MapManager
     public function cloneWorld(World $world, string $name): void
     {
         $from = Server::getInstance()->getDataPath(). 'worlds/' . $world->getFolderName();
-        $to = Server::getInstance()->getDataPath(). 'worlds/' . $name;
+        $to = Server::getInstance()->getDataPath(). 'worlds/' . $name. "(".count($this->worlds_cloned).")";
         Server::getInstance()->getAsyncPool()->submitTask(new CloneWorldTask($from, $to));
     }
 
@@ -63,5 +63,10 @@ class MapManager
         if(is_dir($path)){
             $this->deleteDir($path);
         }
+    }
+
+    public function getNextWorld(): World
+    {
+        return array_shift($this->worlds_cloned);
     }
 }

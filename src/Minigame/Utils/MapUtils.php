@@ -2,6 +2,8 @@
 
 namespace Minigame\Utils;
 
+use ZipArchive;
+
 trait MapUtils
 {
     public function deleteDir(string $path): void
@@ -15,5 +17,13 @@ trait MapUtils
         }else{
             unlink($path);
         }
+    }
+
+    public function extractZip(string $path, string $to): void
+    {
+        $zip = new ZipArchive();
+        $zip->open($path);
+        $zip->extractTo($to);
+        $zip->close();
     }
 }

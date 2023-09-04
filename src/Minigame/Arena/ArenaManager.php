@@ -61,18 +61,6 @@ class ArenaManager
         }return null;
     }
 
-    public function generateCloneArena(Arena $arena):void{
-
-        $world_name = $arena->getWorld()->getFolderName() . '_' . rand(1, 99999);
-
-        Main::getInstance()->getMapManager()->cloneWorld($arena->getWorld(), $world_name);
-
-        $arena->getWorld()->setAutoSave(false);
-
-        $class = $arena::class;
-        $newArena = new $class($arena->getName(), $arena->getSpawnHandler()->getMaxSlots(), Server::getInstance()->getWorldManager()->getWorldByName($world_name));
-        $this->addArena($newArena);
-    }
 
     public function joinArena(Player $player): void
     {

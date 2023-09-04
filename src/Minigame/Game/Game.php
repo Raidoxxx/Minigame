@@ -7,6 +7,7 @@ use Minigame\Arena\Arena;
 use Minigame\Arena\ArenaManager;
 use Minigame\Game\lobby\lobby;
 use Minigame\Main;
+use Minigame\Utils\MapUtils;
 use pocketmine\entity\Location;
 use pocketmine\entity\Skin;
 use pocketmine\Server;
@@ -15,6 +16,7 @@ use pocketmine\world\Position;
 
 abstract class Game
 {
+    use MapUtils;
     private string $name;
     private int $slots;
     private lobby $lobby;
@@ -63,6 +65,7 @@ abstract class Game
      */
     private function init(): void
     {
+        $this->loadWorlds();
         $this->loadArenas();
         $this->loadNPC();
     }
@@ -87,6 +90,24 @@ abstract class Game
                 Server::getInstance()->getLogger()->error("World {$npc['level']} not found");
             }else{
                 $this->getLobby()->addNPC($skin, $name, new Location($x, $y, $z, $world, $yaw, $pitch), $this);
+            }
+        }
+    }
+
+    private function loadWorlds(): void
+    {
+        $path = Main::getInstance()->getDataFolder()."games/{$this->name}/worlds/";
+
+        if(!is_dir($path)){
+            mkdir($path);
+        }
+
+        $files = scandir($path);
+
+        foreach ($files as $file) {
+            if (str_contains($file, '.zip')) {
+                $name = str_replace('.zip', '', $file);
+                $this->extractZip($path . $file, Server::getInstance()->getDataPath() . 'worlds/' . $name);
             }
         }
     }

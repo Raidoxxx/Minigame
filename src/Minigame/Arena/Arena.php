@@ -31,11 +31,11 @@ abstract class Arena
         return $this->name;
     }
 
-    public function setWorld(World $world):void{
+    public function setWorld(World $world): void{
         $this->world = $world;
     }
 
-    public function getWorld():World{
+    public function getWorld(): World{
         return $this->world;
     }
 
