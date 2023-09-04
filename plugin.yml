@@ -1,4 +1,4 @@
-name: RDXTheBridge
+name: RDXMinigame
 version: 0.0.1
-main: TheBridge\Main
+main: Minigame\Main
 api: [5.0.0]
